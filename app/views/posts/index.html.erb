@@ -1,4 +1,6 @@
 <h1>Post#index</h1>
+
+
 <% if current_user.present? %>
     <%= "You are  logged in as #{current_user.nickname}" %>
 <%end%>
@@ -88,7 +90,7 @@
           <tr>
             <td width="100px"><%= user.nickname %></td>
             <td><%= user.email %></td>
-            <td><%= link_to '친구수락', controller: "posts", action: "accept_request", id: user %></td> 
+            <td width="70"><%= link_to '친구수락', controller: "posts", action: "accept_request", id: user %></td> 
             <td><%= link_to '친구거절', controller: "posts", action: "decline_request", id: user %></td> 
           </tr>
         <% end %>
@@ -111,7 +113,7 @@
       <% if current_user.friends.present?%>
         <% current_user.friends.each do |user| %>
           <tr>
-            <td><%= user.nickname %></td>
+            <td width="70px"><%= user.nickname %></td>
             <td><%= user.email %></td>
             <td><%= link_to '친구삭제', controller: "posts", action: "remove_friend", id: user %></td> 
           </tr>
