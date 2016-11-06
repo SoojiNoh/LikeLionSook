@@ -4,6 +4,15 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions" }
 
   root 'posts#index'
+  get 'posts/friend_request/:id' => "posts#friend_request"
+  get 'posts/cancel_request/:id' => "posts#cancel_request"
+
+  get 'posts/accept_request/:id' => "posts#accept_request"
+  get 'posts/decline_request/:id' => "posts#decline_request"
+  
+  get 'posts/remove_friend/:id' => "posts#remove_friend"
+  
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

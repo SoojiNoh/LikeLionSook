@@ -3,31 +3,114 @@
     <%= "You are  logged in as #{current_user.nickname}" %>
 <%end%>
 
-<p id="notice"><%= notice %></p>
-
-<h1>Listing Posts</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Content</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @posts.each do |post| %>
+<div id="friends_tab">
+  <table id="strangers">
+    <thead>
       <tr>
-        <td><%= post.title %></td>
-        <td><%= post.content %></td>
-        <td><%= link_to 'Show', post %></td>
-        <td><%= link_to 'Edit', edit_post_path(post) %></td>
-        <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <h3>Perfect Strangers</h3>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    <%if User.present? %>  
+        <% User.all.each do |user| %>
+          <tr>
+            <%unless (current_user.friends_with?(user)) || (user==current_user)%>
+              <td><%= user.nickname %></td>
+              <td><%= user.email %></td>
+              <% if user.requested_friends.include?(current_user)%>
+                <td>요청을기다리는중</td>
+                <td><%= link_to '요청취소', controller: "posts", action: "cancel_request", id: user %></td>
+              <% else%>
+                <td><%= link_to '친구요청', controller: "posts", action: "friend_request", id: user %></td>
+              <% end%>
+            <% end %> 
+          </tr>
+        <% end %>
+    <%else%>
+      유저없음
+    <%end%>
+    </tbody>
+  </table>
+  
+  <br><br><br>
+  
+  <table id="waiting_strangers">
+    <thead>
+      <tr>
+        <h3>Waiting Strangers</h3>
+      </tr>
+    </thead>
+    <tbody>
+      <% if current_user.requested_friends.present?%>
+        <% current_user.requested_friends.each do |user| %>
+          <tr>
+            <td><%= user.nickname %></td>
+            <td><%= user.email %></td>
+            <td><%= link_to '친구수락', controller: "posts", action: "accept_request", id: user %></td> 
+            <td><%= link_to '친구거절', controller: "posts", action: "decline_request", id: user %></td> 
+          </tr>
+        <% end %>
+      <% else%>
+        <tr>기다리는 친구요청 없음</tr>
+      <%end%>
+    </tbody>
+  </table>
 
+  <br><br><br>
+
+  
+  <table id="friends">
+    <thead>
+      <tr>
+        <h3>Friends</h3>
+      </tr>
+    </thead>
+    <tbody>
+      <% if current_user.friends.present?%>
+        <% current_user.friends.each do |user| %>
+          <tr>
+            <td><%= user.nickname %></td>
+            <td><%= user.email %></td>
+            <td><%= link_to '친구삭제', controller: "posts", action: "remove_friend", id: user %></td> 
+          </tr>
+        <% end %>
+      <% else%>
+       <tr>친구없음</tr>
+      <%end%>
+    </tbody>
+  </table>
+
+<br><br><br>
+  
+</div>
+
+
+<div id="posts_tab">
+  
+  <h1>게시글목록</h1>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Content</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <% @posts.each do |post| %>
+        <tr>
+          <td><%= post.title %></td>
+          <td><%= post.content %></td>
+          <td><%= link_to 'Show', post %></td>
+          <td><%= link_to 'Edit', edit_post_path(post) %></td>
+          <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+</div>
 <br>
 
 <%= link_to 'New Post', new_post_path %>
