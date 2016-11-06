@@ -3,6 +3,48 @@
     <%= "You are  logged in as #{current_user.nickname}" %>
 <%end%>
 
+<div id="search_user">
+
+<%= form_tag(posts_path, :method => "get", id: "search-form") do %>
+<%= text_field_tag :search, params[:search], placeholder: "user의 nickname 또는email" %>
+<%= submit_tag "Search" %>
+<% end %>
+
+
+<table id="strangers">
+    <thead>
+      <tr>
+        <h3>Search User</h3>
+      </tr>
+    </thead>
+    <tbody>
+    <%if @users.present? %>  
+        <% @users.all.each do |user| %>
+          <tr>
+              <td width="100px"><%= user.nickname %></td>
+              <td><%= user.email %></td>
+              <% if user.requested_friends.include?(current_user)%>
+                <td>요청을기다리는중</td>
+                <td><%= link_to '요청취소', controller: "posts", action: "cancel_request", id: user %></td>
+              <% elsif user.friends_with?(current_user)%>
+                <td>친구입니다.</td>
+              <% else %>  
+                <td><%= link_to '친구요청', controller: "posts", action: "friend_request", id: user %></td>
+              <% end%>
+             
+          </tr>
+        <% end %>
+    <%else%>
+      검색유저없음
+    <%end%>
+    </tbody>
+  </table>
+  
+</div>
+
+
+<br><br><br>
+
 <div id="friends_tab">
   <table id="strangers">
     <thead>
@@ -15,7 +57,7 @@
         <% User.all.each do |user| %>
           <tr>
             <%unless (current_user.friends_with?(user)) || (user==current_user)%>
-              <td><%= user.nickname %></td>
+              <td width="100px"><%= user.nickname %></td>
               <td><%= user.email %></td>
               <% if user.requested_friends.include?(current_user)%>
                 <td>요청을기다리는중</td>
@@ -44,7 +86,7 @@
       <% if current_user.requested_friends.present?%>
         <% current_user.requested_friends.each do |user| %>
           <tr>
-            <td><%= user.nickname %></td>
+            <td width="100px"><%= user.nickname %></td>
             <td><%= user.email %></td>
             <td><%= link_to '친구수락', controller: "posts", action: "accept_request", id: user %></td> 
             <td><%= link_to '친구거절', controller: "posts", action: "decline_request", id: user %></td> 
@@ -92,7 +134,7 @@
   <table>
     <thead>
       <tr>
-        <th>Title</th>
+        <th width="300px">Title</th>
         <th>Content</th>
       </tr>
     </thead>

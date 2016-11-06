@@ -4,6 +4,7 @@ class PostsController < ApplicationController
     
 def index
     @posts = Post.all
+    @users = User.search(params[:search])
 end
 
 def create
