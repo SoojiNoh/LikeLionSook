@@ -19,6 +19,16 @@
     <%= f.label :content %><br>
     <%= f.text_area :content %>
   </div>
+  
+  <div class="field">
+    <%= f.label :scope, "공개범위"%>
+    <%= f.radio_button :scope, 1%>
+    비공개
+    <%= f.radio_button :scope, 2%>
+    친구공개
+    <%= f.radio_button :scope, 3%>
+    전체공개
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

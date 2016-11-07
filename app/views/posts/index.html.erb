@@ -137,7 +137,7 @@
     <thead>
       <tr>
         <th width="300px">Title</th>
-        <th>Content</th>
+        <th width="100px">User</th>
       </tr>
     </thead>
   
@@ -145,10 +145,12 @@
       <% @posts.each do |post| %>
         <tr>
           <td><%= post.title %></td>
-          <td><%= post.content %></td>
-          <td><%= link_to 'Show', post %></td>
-          <td><%= link_to 'Edit', edit_post_path(post) %></td>
-          <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= post.user.nickname%></td>
+          <% if current_user.read_authority (post)%><td width="50px"><%= link_to 'Show', post %></td><%end%>
+          <%if post.user == current_user%>
+            <td width="50px"><%= link_to 'Edit', edit_post_path(post) %></td>
+            <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <%end%>
         </tr>
       <% end %>
     </tbody>

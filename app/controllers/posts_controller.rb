@@ -9,7 +9,7 @@ end
 
 def create
     @post = Post.new(post_params)
-
+    @post.user = current_user
     respond_to do |format|
       if @post.save
         format.html { redirect_to @post, notice: 'Post was successfully created.' }
@@ -26,9 +26,11 @@ def new
 end
 
 def show
+  @post = Post.find(params[:id]) 
 end
 
 def update
+  authorize @post, :update?
     respond_to do |format|
       if @post.update(post_params)
         format.html { redirect_to @post, notice: 'Post was successfully updated.' }
@@ -42,6 +44,7 @@ end
 
 
 def destroy
+  authorize @post, :destroy?
     @post.destroy
     respond_to do |format|
       format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
@@ -87,7 +90,7 @@ private
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:title, :content)
+      params.require(:post).permit(:title, :content, :scope)
     end
 
 
